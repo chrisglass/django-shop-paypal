@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from decimal import Decimal
+from django.conf import settings
 from django.conf.urls.defaults import patterns, url, include
 from django.shortcuts import render_to_response
 from paypal.standard.forms import PayPalPaymentsForm
@@ -8,7 +9,7 @@ from paypal.standard.ipn.signals import payment_was_successful as success_signal
 
 class OffsitePaypalBackend(object):
     '''
-    Glue code to let django-SHOP talk to merchant's paypal backend.
+    Glue code to let django-SHOP talk to django-paypal's.
     
     The django-paypal package already defines an IPN view, that logs everything
     to the database (desirable), and fires up a signal.
@@ -27,6 +28,7 @@ class OffsitePaypalBackend(object):
     def __init__(self, shop):
         self.shop = shop
         success_signal.connect(self.payment_was_successful, weak=False)
+        assert settings.PAYPAL_RECEIVER_EMAIL, "You need to define a PAYPAL_RECEIVER_EMAIL in settings with the money recipient's email addresss"
         
     def get_urls(self):
         urlpatterns = patterns('',
@@ -60,7 +62,7 @@ class OffsitePaypalBackend(object):
         order = self.shop.get_order(request)
         
         paypal_dict = {
-        "business": "yourpaypalemail@example.com",
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
         "amount": self.shop.get_order_total(order),
         "item_name": self.shop.get_order_short_name(order),
         "invoice": self.shop.get_order_unique_id(order),
