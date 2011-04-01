@@ -2,6 +2,7 @@
 from decimal import Decimal
 from django.conf import settings
 from django.conf.urls.defaults import patterns, url, include
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.ipn.signals import payment_was_successful as success_signal
@@ -34,6 +35,7 @@ class OffsitePaypalBackend(object):
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.view_that_asks_for_money, name='paypal' ),
+            url(r'^success$', self.paypal_successful_return_view, name='paypal_success' ),
             url(r'^/somethinghardtoguess/instantpaymentnotification/$', include('paypal.standard.ipn.urls')),
         )
         return urlpatterns
@@ -41,19 +43,6 @@ class OffsitePaypalBackend(object):
     #===========================================================================
     # Views
     #===========================================================================
-    
-    def cancel_view(self, request):
-        '''
-        This is called when the customer presses the canel button on paypal's 
-        website.
-        '''
-        pass
-    
-    def return_view(self, request):
-        '''
-        This is called when the customer is succesfully redirected by paypal
-        '''
-        pass
     
     def view_that_asks_for_money(self, request):
         '''
@@ -67,15 +56,18 @@ class OffsitePaypalBackend(object):
         "amount": self.shop.get_order_total(order),
         "item_name": self.shop.get_order_short_name(order),
         "invoice": self.shop.get_order_unique_id(order),
-        "notify_url": "http://www.example.com/your-ipn-location/",
-        "return_url": "http://www.example.com/your-return-location/",
-        "cancel_return": "http://www.example.com/your-cancel-location/",
+        "notify_url": reverse('paypal-ipn'), # defined by django-paypal
+        "return_url": reverse('paypal_success'), # That's this classe's view
+        "cancel_return": self.shop.get_cancel_url(), # A generic one
         }
 
         # Create the instance.
         form = PayPalPaymentsForm(initial=paypal_dict)
         context = {"form": form}
         return render_to_response("payment.html", context)
+    
+    def paypal_successful_return_view(self, request):
+        pass
     
     #===========================================================================
     # Signal listeners
