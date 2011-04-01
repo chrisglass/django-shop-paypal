@@ -15,7 +15,6 @@ class OffsitePaypalBackend(object):
     to the database (desirable), and fires up a signal.
     It is therefore more convenient to listen to the signal instead of rewriting
     the ipn view (and necessary tests)
-    
     '''
     
     backend_name = "Paypal"
@@ -27,6 +26,8 @@ class OffsitePaypalBackend(object):
     
     def __init__(self, shop):
         self.shop = shop
+        # Hook the payment was successful listener on the appropriate signal sent
+        # by django-paypal (success_signal)
         success_signal.connect(self.payment_was_successful, weak=False)
         assert settings.PAYPAL_RECEIVER_EMAIL, "You need to define a PAYPAL_RECEIVER_EMAIL in settings with the money recipient's email addresss"
         
