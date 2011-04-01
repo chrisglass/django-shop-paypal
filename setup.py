@@ -17,6 +17,7 @@ setup(
     classifiers=CLASSIFIERS,
     install_requires=[
         'Django>=1.2',
+        'django-paypal',
     ],
     packages=find_packages(exclude=["example", "example.*"]),
     zip_safe = False
