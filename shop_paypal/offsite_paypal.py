@@ -83,7 +83,7 @@ class OffsitePaypalBackend(object):
         amount = Decimal(ipn_obj.auth_amount)
         transaction_id = ipn_obj.txn_id
         # The actual request to the shop system
-        self.shop.confirm_payment(self.shop.get_order_for_id(order_id), amount, transaction_id)
+        self.shop.confirm_payment(self.shop.get_order_for_id(order_id), amount, transaction_id, self.backend_name)
         
         
     
