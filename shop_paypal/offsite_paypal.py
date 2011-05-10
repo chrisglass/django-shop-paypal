@@ -2,6 +2,7 @@
 from decimal import Decimal
 from django.conf import settings
 from django.conf.urls.defaults import patterns, url, include
+from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from paypal.standard.forms import PayPalPaymentsForm
@@ -50,15 +51,20 @@ class OffsitePaypalBackend(object):
         a reference to the shop interface
         '''
         order = self.shop.get_order(request)
-        
+        url_scheme = 'https' if request.is_secure() else 'http'
+        # get_current_site requires Django 1.3 - backward compatibility?
+        url_domain = get_current_site(request).domain
         paypal_dict = {
         "business": settings.PAYPAL_RECEIVER_EMAIL,
         "amount": self.shop.get_order_total(order),
         "item_name": self.shop.get_order_short_name(order),
         "invoice": self.shop.get_order_unique_id(order),
-        "notify_url": reverse('paypal-ipn'), # defined by django-paypal
-        "return_url": reverse('paypal_success'), # That's this classe's view
-        "cancel_return": self.shop.get_cancel_url(), # A generic one
+        "notify_url": '%s://%s%s' % (url_scheme, 
+            url_domain, reverse('paypal-ipn')), # defined by django-paypal
+        "return_url": '%s://%s%s' % (url_scheme,
+            url_domain, reverse('paypal_success')), # That's this classe's view
+        "cancel_return": '%s://%s%s' % (url_scheme,
+            url_domain, self.shop.get_cancel_url()), # A generic one
         }
 
         # Create the instance.
