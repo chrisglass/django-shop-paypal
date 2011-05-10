@@ -1,3 +1,4 @@
+import pdb
 #-*- coding: utf-8 -*-
 from decimal import Decimal
 
@@ -71,6 +72,8 @@ class OffsitePaypalBackend(object):
         "cancel_return": '%s://%s%s' % (url_scheme,
             url_domain, self.shop.get_cancel_url()), # A generic one
         }
+        if hasattr(settings, 'PAYPAL_LC'):
+            paypal_dict['lc'] = settings.PAYPAL_LC
 
         # Create the instance.
         form = PayPalPaymentsForm(initial=paypal_dict)
