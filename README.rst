@@ -21,7 +21,14 @@ Add django-paypal and this project to your INSTALLED_APPS:::
 Add 'shop_paypal.offsite_paypal.OffsitePaypalBackend' to django-SHOP's SHOP_PAYMENT_BACKENDS
 setting.
 
-Set `PAYPAL_RECEIVER_EMAIL` in settings.py.
+Make sure you set following in settings.py:
+
+* `PAYPAL_RECEIVER_EMAIL`
+* `PAYPAL_CURRENCY_CODE` (see https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
+
+Optional settings:
+
+* `PAYPAL_LC` - paypal language (see: https://cms.paypal.com/us/cgi-bin/?&cmd=_render-content&content_ID=developer/e_howto_api_nvp_country_codes)
 
 Todo
 =====

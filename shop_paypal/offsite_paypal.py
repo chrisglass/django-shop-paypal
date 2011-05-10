@@ -35,6 +35,7 @@ class OffsitePaypalBackend(object):
         # by django-paypal (success_signal)
         success_signal.connect(self.payment_was_successful, weak=False)
         assert settings.PAYPAL_RECEIVER_EMAIL, "You need to define a PAYPAL_RECEIVER_EMAIL in settings with the money recipient's email addresss"
+        assert settings.PAYPAL_CURRENCY_CODE, "You need to define a PAYPAL_CURRENCY_CODE in settings with the currency code"
         
     def get_urls(self):
         urlpatterns = patterns('',
@@ -59,6 +60,7 @@ class OffsitePaypalBackend(object):
         url_domain = get_current_site(request).domain
         paypal_dict = {
         "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "currency_code": settings.PAYPAL_CURRENCY_CODE,
         "amount": self.shop.get_order_total(order),
         "item_name": self.shop.get_order_short_name(order),
         "invoice": self.shop.get_order_unique_id(order),
@@ -69,6 +71,8 @@ class OffsitePaypalBackend(object):
         "cancel_return": '%s://%s%s' % (url_scheme,
             url_domain, self.shop.get_cancel_url()), # A generic one
         }
+        if hasattr(settings, 'PAYPAL_LC'):
+            paypal_dict['lc'] = settings.PAYPAL_LC
 
         # Create the instance.
         form = PayPalPaymentsForm(initial=paypal_dict)
