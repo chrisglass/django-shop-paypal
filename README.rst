@@ -9,9 +9,19 @@ It uses django-paypal as a way to actually communicate with paypal.
 Usage
 ======
 
-Add this project to your INSTALLED_APPS, and add 
-'shop_paypal.offsite_paypal.OffsitePaypalBackend' to django-SHOP's SHOP_PAYMENT_BACKENDS
+Add django-paypal and this project to your INSTALLED_APPS:::
+
+  INSTALLED_APPS = (
+  ...
+  'paypal.standard.ipn',
+  'shop_paypal',
+  ...
+  )
+
+Add 'shop_paypal.offsite_paypal.OffsitePaypalBackend' to django-SHOP's SHOP_PAYMENT_BACKENDS
 setting.
+
+Set `PAYPAL_RECEIVER_EMAIL` in settings.py.
 
 Todo
 =====
