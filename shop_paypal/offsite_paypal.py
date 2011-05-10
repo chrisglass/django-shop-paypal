@@ -90,7 +90,7 @@ class OffsitePaypalBackend(object):
         '''
         ipn_obj = sender
         order_id = ipn_obj.invoice # That's the "invoice ID we passed to paypal
-        amount = Decimal(ipn_obj.auth_amount)
+        amount = Decimal(ipn_obj.mc_gross)
         transaction_id = ipn_obj.txn_id
         # The actual request to the shop system
         self.shop.confirm_payment(self.shop.get_order_for_id(order_id), amount, transaction_id, self.backend_name)
