@@ -34,9 +34,9 @@ class OffsitePaypalBackend(object):
         
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^$', self.view_that_asks_for_money, name='paypal' ),
-            url(r'^success$', self.paypal_successful_return_view, name='paypal_success' ),
-            url(r'^/somethinghardtoguess/instantpaymentnotification/$', include('paypal.standard.ipn.urls')),
+            url(r'^paypal/$', self.view_that_asks_for_money, name='paypal' ),
+            url(r'^paypal/success/$', self.paypal_successful_return_view, name='paypal_success' ),
+            url(r'^paypal/somethinghardtoguess/instantpaymentnotification/', include('paypal.standard.ipn.urls')),
         )
         return urlpatterns
     
