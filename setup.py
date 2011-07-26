@@ -8,7 +8,7 @@ setup(
     author="Christopher Glass",
     author_email="tribaal@gmail.com",
     name='django-shop-paypal',
-    version='0.0.0',
+    version='0.0.1',
     description='An paypal payment backend wrapping django-paypal',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     url='http://www.django-shop.org/',
