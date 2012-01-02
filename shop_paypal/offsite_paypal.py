@@ -45,15 +45,11 @@ class OffsitePaypalBackend(object):
             url(r'^somethinghardtoguess/instantpaymentnotification/$', include('paypal.standard.ipn.urls')),
         )
         return urlpatterns
-    
-    #===========================================================================
-    # Views
-    #===========================================================================
-    
-    def view_that_asks_for_money(self, request):
+
+    def get_form(self, request):
         '''
-        We need this to be a method and not a function, since we need to have
-        a reference to the shop interface
+        Configures a paypal form and returns. Allows this code to be reused
+        in other views.
         '''
         order = self.shop.get_order(request)
         url_scheme = 'https' if request.is_secure() else 'http'
@@ -77,6 +73,18 @@ class OffsitePaypalBackend(object):
 
         # Create the instance.
         form = PayPalPaymentsForm(initial=paypal_dict)
+        return form
+
+    #===========================================================================
+    # Views
+    #===========================================================================
+
+    def view_that_asks_for_money(self, request):
+        '''
+        We need this to be a method and not a function, since we need to have
+        a reference to the shop interface
+        '''
+        form = self.get_form(request)
         context = {"form": form}
         rc = RequestContext(request, context)
         return render_to_response("shop_paypal/payment.html", rc)
