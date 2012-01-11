@@ -91,7 +91,8 @@ class OffsitePaypalBackend(object):
 
     @csrf_exempt
     def paypal_successful_return_view(self, request):
-        return render_to_response("shop_paypal/success.html", {})
+        rc = RequestContext(request, {})
+        return render_to_response("shop_paypal/success.html", rc)
 
     #===========================================================================
     # Signal listeners
