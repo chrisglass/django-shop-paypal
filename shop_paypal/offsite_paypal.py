@@ -34,7 +34,8 @@ class OffsitePaypalBackend(object):
         self.shop = shop
         # Hook the payment was successful listener on the appropriate signal sent
         # by django-paypal (success_signal)
-        success_signal.connect(self.payment_was_successful, weak=False)
+        success_signal.connect(self.payment_was_successful, weak=False,
+            dispatch_uid='django-shop-paypal_offsite_payment-successful')
         assert settings.PAYPAL_RECEIVER_EMAIL, "You need to define a PAYPAL_RECEIVER_EMAIL in settings with the money recipient's email addresss"
         assert settings.PAYPAL_CURRENCY_CODE, "You need to define a PAYPAL_CURRENCY_CODE in settings with the currency code"
 
