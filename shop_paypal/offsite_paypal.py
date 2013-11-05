@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
