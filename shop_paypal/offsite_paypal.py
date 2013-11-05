@@ -67,8 +67,14 @@ class OffsitePaypalBackend(object):
         url_scheme = 'https' if request.is_secure() else 'http'
         # get_current_site requires Django 1.3 - backward compatibility?
         url_domain = get_current_site(request).domain
+
+        try:
+            business = settings.PAYPAL_BUSINESS
+        except AttributeError:
+            business = settings.PAYPAL_RECEIVER_EMAIL
+
         paypal_dict = {
-            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "business": business,
             "currency_code": settings.PAYPAL_CURRENCY_CODE,
             "amount": self.shop.get_order_total(order),
             "item_name": self.shop.get_order_short_name(order),
