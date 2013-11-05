@@ -44,10 +44,6 @@ class OffsitePaypalBackend(object):
                                                "settings with the " \
                                                "recipient's email addresss"
 
-        assert settings.PAYPAL_CURRENCY_CODE, "You need to define " \
-                                              "PAYPAL_CURRENCY_CODE in " \
-                                              "settings with the currency code"
-
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.view_that_asks_for_money, name='paypal'),
@@ -73,9 +69,14 @@ class OffsitePaypalBackend(object):
         except AttributeError:
             business = settings.PAYPAL_RECEIVER_EMAIL
 
+        try:
+            currency_code = self.shop.get_order_currency(order)
+        except AttributeError:
+            currency_code = settings.PAYPAL_CURRENCY_CODE
+
         paypal_dict = {
             "business": business,
-            "currency_code": settings.PAYPAL_CURRENCY_CODE,
+            "currency_code": currency_code,
             "amount": self.shop.get_order_total(order),
             "item_name": self.shop.get_order_short_name(order),
             "invoice": self.shop.get_order_unique_id(order),
