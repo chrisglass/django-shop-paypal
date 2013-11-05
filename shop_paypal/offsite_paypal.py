@@ -106,6 +106,9 @@ class OffsitePaypalBackend(object):
 
     @csrf_exempt
     def paypal_successful_return_view(self, request):
+        if getattr(settings, "PAYPAL_SUCCESS_REDIRECT_TO_THANKYOU", False):
+            return HttpResponseRedirect(self.shop.get_finished_url())
+
         rc = RequestContext(request, {})
         return render_to_response("shop_paypal/success.html", rc)
 
