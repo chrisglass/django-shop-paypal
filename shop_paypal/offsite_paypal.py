@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext_lazy as _
 
 from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.ipn.signals import payment_was_successful as success_signal
@@ -25,6 +26,7 @@ class OffsitePaypalBackend(object):
     '''
 
     backend_name = "Paypal"
+    backend_verbose_name = _("Paypal")
     url_namespace = "paypal"
 
     #==========================================================================
