@@ -2,6 +2,11 @@
 django-shop-paypal
 ======================
 
+THIS PROJECT IS UNMAINTAINED
+=============================
+
+I haven't used this project in years so it probably bitrotted away. If you are interested in taking over maintainership please get in touch.
+
 This applicaiton is a paypal backend for django-SHOP, or any other shop system
 implementing its shop interface.
 It uses django-paypal as a way to actually communicate with paypal.
